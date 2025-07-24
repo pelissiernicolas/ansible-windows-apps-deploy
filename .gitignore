@@ -1,0 +1,16 @@
+cat <<EOF > .gitignore
+# Dossiers temporaires
+.venv/
+ansible_venv/
+.vscode/
+__pycache__/
+
+# Fichiers Ansible
+*.retry
+*.log
+*.vault
+
+# Clés et secrets potentiels
+*.pem
+*.key
+EOF
