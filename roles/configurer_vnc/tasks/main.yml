@@ -1,0 +1,19 @@
+- name: Lancer TightVNC Server en mode utilisateur
+  win_shell: |
+    Start-Process -FilePath 'C:\Program Files\TightVNC\tvnserver.exe' -ArgumentList '-run'
+  args:
+    executable: powershell.exe
+
+
+- name: Autoriser le contrôle en tant que service
+  win_regedit:
+    path: HKLM:\Software\TightVNC\Server
+    name: RunControlInterface
+    data: 0
+    type: dword
+
+- name: S'assurer que le service TightVNC est démarré
+  win_service:
+    name: tvnserver
+    start_mode: auto
+    state: started

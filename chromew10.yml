@@ -1,0 +1,20 @@
+- name: Installer Google Chrome sur Windows 10
+  hosts: windows
+  gather_facts: no
+  tasks:
+    - name: Créer le dossier C:\Temp s'il n'existe pas
+      win_file:
+        path: C:\Temp
+        state: directory
+
+    - name: Télécharger le fichier d'installation
+      win_get_url:
+        url: https://dl.google.com/chrome/install/375.126/chrome_installer.exe
+        dest: C:\Temp\chrome_installer.exe
+
+    - name: Lancer l'installation silencieuse
+      win_package:
+        path: C:\Temp\chrome_installer.exe
+        arguments: /silent /install
+        product_id: 'Google Chrome'
+        state: present

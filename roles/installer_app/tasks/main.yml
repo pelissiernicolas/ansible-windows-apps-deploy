@@ -1,0 +1,41 @@
+- name: Créer le dossier C:\Temp s’il n’existe pas
+  win_file:
+    path: C:\Temp
+    state: directory
+
+- name: Copier les fichiers MSI locaux (si fichier local fourni)
+  win_copy:
+    src: "{{ item.local_src }}"
+    dest: "{{ item.dest }}"
+  when: item.local_src is defined
+  loop: "{{ apps }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Copier le fichier .MST si présent
+  win_copy:
+    src: "{{ item.mst_file }}"
+    dest: "{{ item.mst_dest }}"
+  when: item.mst_file is defined
+  loop: "{{ apps }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Télécharger les applications distantes (si URL fournie)
+  win_get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+  when: item.url is defined and item.url != ""
+  loop: "{{ apps }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Installer les applications
+  win_package:
+    path: "{{ item.dest }}"
+    arguments: "{{ item.args | default('') }}"
+    product_id: "{{ item.name }}"
+    state: present
+  loop: "{{ apps }}"
+  loop_control:
+    label: "{{ item.name }}"

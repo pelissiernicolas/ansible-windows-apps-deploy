@@ -1,0 +1,22 @@
+- name: Installer des applications sur Windows
+  hosts: windows
+  gather_facts: no
+  vars:
+    apps:
+      - name: "Google Chrome"
+        url: "https://dl.google.com/chrome/install/375.126/chrome_installer.exe"
+        dest: "C:\\Temp\\chrome_installer.exe"
+        args: "/silent /install"
+      - name: "Mozilla Firefox"
+        url: "https://download.mozilla.org/?product=firefox-latest&os=win64&lang=fr"
+        dest: "C:\\Temp\\firefox_installer.exe"
+        args: "/silent"
+      - name: "TightVNC"
+        local_src: "files/tightvnc.msi"
+        dest: "C:\\Temp\\tightvnc.msi"
+        mst_file: "files/tightvnc_config.mst"
+        mst_dest: "C:\\Temp\\tightvnc_config.mst"
+        args: '/quiet TRANSFORMS="C:\\Temp\\tightvnc_config.mst"'
+  roles:
+    - installer_app
+    - configurer_vnc
